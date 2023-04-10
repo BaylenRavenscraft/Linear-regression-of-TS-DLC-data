@@ -1,0 +1,177 @@
+#make sure packages listed below are installed and active.
+
+library(readr)
+library(ggplot2)
+library(ggpmisc)
+library(broom)
+library(knitr)
+library(magrittr)
+
+# create a directory folder (tailor for your own file path)
+dir.create("C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/cross-corr-analysis in R/R-lm_linear-regression-6-output folder")
+
+
+# List of file paths (tailor for your own file paths)
+file_paths <- c("C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 1-1 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 1-2 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 1-3 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 1-4 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 2-1 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 2-2 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 2-3 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 2-4 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 3-1 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 3-2 SCI 8W 4cmDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 3-3 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 4-1 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 4-1a SCI 8W 10cmDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 4-2 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 4-3 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 4-4 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 5-1 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 5-2 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 5-3 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 5-4 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 6-1 SCI 8W 10cmDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 6-1 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 6-1a SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 6-2 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 6-4 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 7-1 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 7-2 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 7-3 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 7-4 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 8-1 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 8-2 SCI 8W 6cmDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 8-4 SCI 8W 8cmDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 9-1 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 9-2 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 9-3 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv",
+                "C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/data/8-29-22 9-4 SCI 8WDLC_resnet50_DLC-attempt-5Dec3shuffle1_50000.csv")
+
+# Loop over the files
+for (i in seq_along(file_paths)) {
+  
+  # Read the CSV file into R and assign it to a data frame called 'df' and skip the first two headers for column-label headers (i used CSVs, but change if you use excel, etc.):
+  df <- read_csv(file_paths[i], skip = 2)
+  
+  # Convert the columns of interest to numeric vectors:
+  front_right_paw_x <- as.numeric(df[[26]])
+  front_right_paw_y <- as.numeric(df[[27]])
+  left_hindlimb_paw_x <- as.numeric(df[[47]])
+  left_hindlimb_paw_y <- as.numeric(df[[48]])
+  front_left_paw_x <- as.numeric(df[[38]])
+  front_left_paw_y <- as.numeric(df[[39]])
+  right_hindlimb_paw_x <- as.numeric(df[[17]])
+  right_hindlimb_paw_y <- as.numeric(df[[18]])
+  
+  # Create a data frame with the variables:
+  data <- data.frame(front_right_paw_x = front_right_paw_x,
+                     front_right_paw_y = front_right_paw_y,
+                     left_hindlimb_paw_x = left_hindlimb_paw_x,
+                     left_hindlimb_paw_y = left_hindlimb_paw_y,
+                     front_left_paw_x = front_left_paw_x,
+                     front_left_paw_y = front_left_paw_y,
+                     right_hindlimb_paw_x = right_hindlimb_paw_x,
+                     right_hindlimb_paw_y = right_hindlimb_paw_y)
+  
+  # Fit linear regression models:
+  model1 <- lm(front_right_paw_x ~ left_hindlimb_paw_x, data = data)
+  model2 <- lm(front_right_paw_y ~ left_hindlimb_paw_y, data = data)
+  model3 <- lm(front_left_paw_x ~ right_hindlimb_paw_x, data = data)
+  model4 <- lm(front_left_paw_y ~ right_hindlimb_paw_y, data = data)
+  
+  # Print model summaries:
+  cat(paste0("File ", i, ":\n"))
+  kable(tidy(model1))
+  kable(tidy(model2))
+  kable(tidy(model3))
+  kable(tidy(model4))
+  
+  # Plot, print, and save the data and the fitted regression lines:
+  LHpX_v_FRpX <-  ggplot(data, aes(x = left_hindlimb_paw_x, y = front_right_paw_x)) +
+    geom_point() +
+    geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+    ggtitle("Front Right Paw X vs Left Hindlimb Paw X") +
+    theme_bw()
+  print(ggplot(data, aes(x = left_hindlimb_paw_x, y = front_right_paw_x)) +
+          geom_point() +
+          geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+          ggtitle("Front Right Paw X vs Left Hindlimb Paw X") +
+          theme_bw())
+  ggsave(paste0("C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/cross-corr-analysis in R/R-lm_linear-regression-6-output folder", i, "_LHpX_v_FRpX_plots.pdf"), 
+         plot = ggplot(data, aes(x = left_hindlimb_paw_x, y = front_right_paw_x)) +
+           geom_point() +
+           geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+           ggtitle("Front Right Paw X vs Left Hindlimb Paw X") +
+           theme_bw())
+  
+  
+  LHpY_v_FRpY <-  ggplot(data, aes(x = left_hindlimb_paw_y, y = front_right_paw_y)) +
+    geom_point() +
+    geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+    ggtitle("Front Right Paw Y vs Left Hindlimb Paw Y") +
+    theme_bw()
+  print(ggplot(data, aes(x = left_hindlimb_paw_y, y = front_right_paw_y)) +
+          geom_point() +
+          geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+          ggtitle("Front Right Paw Y vs Left Hindlimb Paw Y") +
+          theme_bw())
+  ggsave(paste0("C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/cross-corr-analysis in R/R-lm_linear-regression-6-output folder", i, "_LHpY_v_FRpY_plots.pdf"), 
+         plot = ggplot(data, aes(x = left_hindlimb_paw_y, y = front_right_paw_y)) +
+           geom_point() +
+           geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+           ggtitle("Front Right Paw Y vs Left Hindlimb Paw Y") +
+           theme_bw())
+  
+  RHpX_v_FLpX <-  ggplot(data, aes(x = right_hindlimb_paw_x, y = front_left_paw_x)) +
+    geom_point() +
+    geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+    ggtitle("Front Left Paw X vs Right Hindlimb Paw X") +
+    theme_bw()
+  print(ggplot(data, aes(x = right_hindlimb_paw_x, y = front_left_paw_x)) +
+          geom_point() +
+          geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+          ggtitle("Front Left Paw X vs Right Hindlimb Paw X") +
+          theme_bw())
+  ggsave(paste0("C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/cross-corr-analysis in R/R-lm_linear-regression-6-output folder", i, "_RHpX_v_FLpX_plots.pdf"), 
+         plot = ggplot(data, aes(x = right_hindlimb_paw_x, y = front_left_paw_x)) +
+           geom_point() +
+           geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+           ggtitle("Front Left Paw X vs Right Hindlimb Paw X") +
+           theme_bw())
+  
+  RHpY_v_FLpY <-  ggplot(data, aes(x = right_hindlimb_paw_y, y = front_left_paw_y)) +
+    geom_point() +
+    geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+    ggtitle("Front Left Paw Y vs Right Hindlimb Paw Y") +
+    theme_bw()
+  print(ggplot(data, aes(x = right_hindlimb_paw_y, y = front_left_paw_y)) +
+          geom_point() +
+          geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+          ggtitle("Front Left Paw Y vs Right Hindlimb Paw Y") +
+          theme_bw())
+  ggsave(paste0("C:/Users/14632/Desktop/DeepLabCut/x-correlation-re-re-analysis/cross-corr-analysis in R/R-lm_linear-regression-6-output folder", i, "_RHpY_v_FLpY_plots.pdf"), 
+         plot = ggplot(data, aes(x = right_hindlimb_paw_y, y = front_left_paw_y)) +
+           geom_point() +
+           geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+           ggtitle("Front Left Paw Y vs Right Hindlimb Paw Y") +
+           theme_bw())
+  
+  # Display analyses summaries in console:
+  summary(model1)
+  summary(model2)
+  summary(model3)
+  summary(model4)
+  
+  # save the plot
+  ggsave("LinearRegression-try7.png")
+  
+
+}
+  
+  
+  
+  
+  
+  
